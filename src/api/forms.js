@@ -1,7 +1,7 @@
-const apiBase = import.meta.env.VITE_API_BASE_URL ?? '';
+import { apiBase } from './base.js';
 
 async function submit(path, payload) {
-  if (!apiBase) return { id: crypto.randomUUID(), ...payload, demo: true };
+  if (!apiBase) throw new Error('未配置 VITE_API_BASE_URL，无法提交表单');
   const response = await fetch(`${apiBase}${path}`, {
     method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload),
   });

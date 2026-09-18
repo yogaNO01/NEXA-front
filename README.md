@@ -20,10 +20,10 @@ npm run dev
 复制 `.env.example` 为 `.env.local`：
 
 ```bash
-VITE_API_BASE_URL=http://localhost:8000
+VITE_API_BASE_URL=auto
 ```
 
-未配置时会使用本地演示数据，便于独立开发；配置后解决方案导航、首页前 8 条、方案总览、详情以及线索/工单提交都会调用对应公开接口。
+`auto` 会根据浏览器当前地址自动选择接口主机：本机访问 `http://localhost:5175` 时请求 `http://localhost:8000`，局域网访问 `http://192.168.5.56:5175` 时请求 `http://192.168.5.56:8000`。如前后端部署在不同主机，可改为完整接口地址。
 
 ## 运营后台
 

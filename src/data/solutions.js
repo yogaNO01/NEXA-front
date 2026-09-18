@@ -3,7 +3,7 @@ export const solutionGroups = [
   { id: 'energy', name: '能源与工业', order: 2, solutions: ['energy', 'industry', 'private-cloud', 'ai'] },
 ];
 
-const image = (id) => `https://images.unsplash.com/${id}?auto=format&fit=crop&w=1600&q=86`;
+const image = (id) => `/reference-images/${id}.jpg`;
 export const solutions = [
   ['building','智慧楼宇','楼','1486406146926-c627a92ad1ab','设备管理、区域守护、能源监测和辅助运维的一体化楼宇方案。',['楼宇设备统一接入','空间与能耗可视化','告警工单闭环','多楼栋集中运营']],
   ['hotel','智慧酒店','酒','1566073771259-6a8506099945','围绕客房控制、住客体验、能耗策略与酒店运营构建一体化智慧客房方案。',['客房智能控制','服务联动','能耗策略','运营看板']],

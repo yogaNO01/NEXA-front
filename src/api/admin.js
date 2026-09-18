@@ -1,4 +1,4 @@
-const apiBase = import.meta.env.VITE_API_BASE_URL ?? '';
+import { apiBase } from './base.js';
 const tokenKey = 'nexa-admin-token';
 
 export const hasAdminApi = Boolean(apiBase);
