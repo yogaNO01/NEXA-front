@@ -218,13 +218,15 @@ function translateRenderedText(value, locale) {
 }
 
 function translateRenderedNode(node, locale) {
-  if (apiTextNodes.has(node)) return;
   const apiText = unwrapApiText(node.nodeValue);
   if (apiText !== null) {
     apiTextNodes.add(node);
     node.nodeValue = apiText;
     return;
   }
+  // React may later restore an API value on a text node we already handled.
+  // Always unwrap the marker first; only then skip translation for its clean text.
+  if (apiTextNodes.has(node)) return;
   if (node.parentElement?.closest('script, style, [data-i18n-skip]')) return;
   const translated = translateRenderedText(node.nodeValue, locale);
   if (translated !== node.nodeValue) node.nodeValue = translated;

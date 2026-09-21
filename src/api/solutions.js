@@ -2,7 +2,7 @@ import { apiBase } from './base.js';
 import { markApiText } from './apiText.js';
 const localizeReferenceImage = (value) => typeof value === 'string'
   ? value.replace(
-    /https:\/\/images\.unsplash\.com\/photo-([^?'"\\s)]+)(?:\?[^'"\\s)]*)?/g,
+    /https:\/\/images\.unsplash\.com\/(?:photo-)?([^?'"\\s)]+)(?:\?[^'"\\s)]*)?/g,
     (_match, id) => `/reference-images/${id === '1523050854058-8df90110c9f1' ? '1564981797816-1043664bf78d' : id}.jpg`,
   )
   : value;
