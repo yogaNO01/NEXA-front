@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useState } from 'react';
 import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import { getSolutionNavigation, getSolutions, getSolutionBySlug } from './api/solutions.js';
 import { submitLead, submitTicket } from './api/forms.js';
@@ -101,24 +101,6 @@ function RouteContent() {
   const { pathname } = useLocation();
   const navigate = useNavigate();
   const path = normalizePath(pathname);
-  const scrollLock = useRef(null);
-  const releaseScrollLock = () => {
-    if (!scrollLock.current) return;
-    window.clearTimeout(scrollLock.current.timer);
-    document.documentElement.style.overflow = scrollLock.current.overflow;
-    scrollLock.current = null;
-  };
-  const holdScrollAtTop = () => {
-    releaseScrollLock();
-    const root = document.documentElement;
-    const overflow = root.style.overflow;
-    root.style.overflow = 'hidden';
-    scrollToPageTop();
-    scrollLock.current = {
-      overflow,
-      timer: window.setTimeout(releaseScrollLock, 180),
-    };
-  };
   const handleInternalNavigation = (event) => {
     if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
     if (!(event.target instanceof Element)) return;
@@ -130,10 +112,9 @@ function RouteContent() {
     event.preventDefault();
     const next = `${destination.pathname}${destination.search}${destination.hash}`;
     if (destination.pathname === pathname && destination.search === window.location.search) {
-      holdScrollAtTop();
+      scrollToPageTop();
       return;
     }
-    holdScrollAtTop();
     navigate(next);
   };
   useEffect(() => {
@@ -144,7 +125,6 @@ function RouteContent() {
       window.history.scrollRestoration = previous;
     };
   }, []);
-  useEffect(() => releaseScrollLock, []);
   useEffect(() => {
     Promise.all([getSolutionNavigation(), getSolutions({ limit: 8 }), getSolutions()])
       .then(([g, home, all]) => { setGroups(g); setHomeSolutions(home); setAllSolutions(all) }).catch(console.error);
@@ -154,7 +134,7 @@ function RouteContent() {
     if (match) getSolutionBySlug(match[1]).then(setDetail).catch(console.error);
     else setDetail(null);
   }, [path]);
-  const content = path === '/admin' ? <Admin /> : path === '/' ? <ReferenceHome /> : path === '/solutions' ? <ReferenceSolutions /> : (() => { const newsMatch = path.match(/^\/news\/([^/]+)$/); const platformMatch = path.match(/^\/platform(?:\/([^/]+))?$/); const body = path === '/status' ? <ServiceStatus /> : path === '/support/certification' ? <CertificationPage /> : platformMatch ? <PlatformPages slug={platformMatch[1]} /> : newsMatch ? <NewsDetail slug={newsMatch[1]} /> : path === '/news' ? <NewsCenter /> : path === '/cases' ? <ContentPage kind="cases" title="客户案例" description="以真实项目沉淀行业实践与可复用的运营路径。" /> : path === '/help' || path === '/support/help' ? <HelpPage /> : path.startsWith('/solutions/') ? <SolutionDetail solution={detail} /> : <StaticPage page={path.slice(1)} />; return <><SiteHeader onConsult={() => navigate('/contact')} />{body}<SiteFooter /></>; })(); return <div onClickCapture={handleInternalNavigation}><RouteTopTarget />{content}</div>
+  const content = path === '/admin' ? <div data-i18n-skip><Admin /></div> : path === '/' ? <ReferenceHome /> : path === '/solutions' ? <ReferenceSolutions /> : (() => { const newsMatch = path.match(/^\/news\/([^/]+)$/); const platformMatch = path.match(/^\/platform(?:\/([^/]+))?$/); const body = path === '/status' ? <ServiceStatus /> : path === '/support/certification' ? <CertificationPage /> : platformMatch ? <PlatformPages slug={platformMatch[1]} /> : newsMatch ? <NewsDetail slug={newsMatch[1]} /> : path === '/news' ? <NewsCenter /> : path === '/cases' ? <ContentPage kind="cases" title="客户案例" description="以真实项目沉淀行业实践与可复用的运营路径。" /> : path === '/help' || path === '/support/help' ? <HelpPage /> : path.startsWith('/solutions/') ? <SolutionDetail solution={detail} /> : <StaticPage page={path.slice(1)} />; return <><SiteHeader onConsult={() => navigate('/contact')} />{body}<SiteFooter /></>; })(); return <div onClickCapture={handleInternalNavigation}><RouteTopTarget />{content}</div>
 }
 
 export default function App() {

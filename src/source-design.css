@@ -218,3 +218,65 @@ select.input,.form select{appearance:none;background-color:#fff;background-image
 
 /* Text stays a normal cursor; only real controls advertise that they are interactive. */
 body{cursor:default}a[href],button,summary,input[type="button"],input[type="submit"],input[type="reset"],input[type="checkbox"],input[type="radio"],select,label[for]{cursor:pointer}
+
+/* Long translated copy must participate in layout instead of escaping cards. */
+.info-hero-card{height:auto;min-height:330px}
+.info-hero-card>*,.info-hero-card .meta>*{min-width:0}
+.info-hero-card .meta{grid-template-columns:repeat(3,minmax(0,1fr))}
+.info-hero-card .meta span{line-height:1.45;overflow-wrap:break-word}
+
+html[lang="en"] :where(
+  .mega-card,
+  .card,
+  .bullet,
+  .metric,
+  .flow-step,
+  .info-card,
+  .info-hero-card,
+  .resource-panel,
+  .resource-row,
+  .trust-badge,
+  .timeline-item,
+  .contact-method,
+  .cert-box,
+  .solution-directory-card,
+  .news-stack a,
+  .news-topic-card
+){min-width:0}
+
+html[lang="en"] :where(
+  .mega-card,
+  .card,
+  .bullet,
+  .metric,
+  .flow-step,
+  .info-card,
+  .info-hero-card,
+  .resource-panel,
+  .resource-row,
+  .trust-badge,
+  .timeline-item,
+  .contact-method,
+  .cert-box,
+  .solution-directory-card,
+  .news-stack a,
+  .news-topic-card
+) :where(h2,h3,h4,p,b,span,small){overflow-wrap:break-word}
+
+html[lang="en"] .info-hero-card .big{font-size:clamp(34px,3.5vw,40px);line-height:1.08;overflow-wrap:break-word}
+
+@media(max-width:1100px) and (min-width:901px){
+  html[lang="en"] .info-hero .wrap{grid-template-columns:minmax(0,1fr) minmax(380px,.9fr);gap:36px}
+  html[lang="en"] .info-hero-card{padding:26px}
+}
+
+@media(max-width:900px){
+  .platform-directory{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+
+@media(max-width:560px){
+  .platform-directory{grid-template-columns:1fr}
+  .info-hero-card .meta{grid-template-columns:1fr}
+  .info-hero-card .meta span{display:grid;grid-template-columns:minmax(76px,auto) minmax(0,1fr);align-items:center;gap:12px}
+  .info-hero-card .meta b{margin:0}
+}

@@ -26,7 +26,7 @@ const request = async (path) => {
 };
 
 export const getSolutionNavigation = () => request('/api/public/solutions/navigation')
-  .then(groups => groups.map(group => ({ ...group, solutions: group.solutions.map(normalizeSolution) })));
+  .then(groups => markApiText(groups.map(group => ({ ...group, solutions: group.solutions.map(normalizeSolution) }))));
 export const getSolutions = ({ limit } = {}) => request(`/api/public/solutions${limit ? `?limit=${limit}` : ''}`)
   .then(items => items.map(normalizeSolution));
 export const getSolutionBySlug = (slug) => request(`/api/public/solutions/${slug}`).then(normalizeSolution);
