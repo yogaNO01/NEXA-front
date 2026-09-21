@@ -94,9 +94,7 @@ body.nav-scroll-lock{overflow:hidden;padding-right:var(--nav-scrollbar-gap,0px)}
 .anchorbar{z-index:35!important}
 /* Avoid expensive smooth scrolling and off-screen painting during page switches. */
 html{scroll-behavior:auto!important}
-.section{content-visibility:auto;contain-intrinsic-size:1px 720px}
 .page-hero,.home-hero,.anchorbar,.header,.mega{content-visibility:visible}
-img{content-visibility:auto}
 /* Refined solution advantage cards: quieter, broader and aligned with enterprise visual language. */
 .rich-cards{gap:18px}
 .rich-cards .card{min-height:238px;padding:28px 28px 26px;border:1px solid #e3e9e6;border-radius:18px;background:#fff!important;box-shadow:0 8px 26px rgba(21,48,35,.035);display:flex;flex-direction:column;overflow:hidden;position:relative;transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease}

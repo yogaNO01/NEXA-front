@@ -2,7 +2,7 @@ import { useState } from 'react';
 import platformReference from './data/platformReference.js';
 import { useI18n } from './i18n.jsx';
 
-const href = (path) => `#${path}`;
+const href = (path) => path;
 // The reference project's images are shipped with the site.  Keeping platform
 // pages on local assets avoids a third-party image host becoming a page-level
 // dependency (and works on the intranet too).
