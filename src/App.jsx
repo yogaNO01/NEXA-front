@@ -8,6 +8,7 @@ import ReferenceHome, { ReferenceSolutions, SiteHeader, SiteFooter, SuccessDialo
 import Admin from './Admin.jsx';
 import PlatformPages from './PlatformPages.jsx';
 import SelectField from './SelectField.jsx';
+import { useI18n } from './i18n.jsx';
 
 const href = (path) => path;
 const formatPublishedAt = (value) => value ? new Intl.DateTimeFormat('zh-CN', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', hour12: false }).format(new Date(String(value).replace(' ', 'T'))) : '发布时间待补充';
@@ -64,13 +65,14 @@ function ArchitectureSection({ solution }) {
   const architecture = solution.architecture;
   const layers = Array.isArray(architecture?.layers) ? architecture.layers.filter((layer) => layer?.name) : [];
   if (!layers.length) return null;
-  return <section className="section alt"><div className="wrap"><div className="section-head"><div><span className="eyebrow">ARCHITECTURE</span><h2>{architecture.title}</h2></div>{architecture.description && <p>{architecture.description}</p>}</div><div className="arch solution-arch" style={{ backgroundImage: `url(${architecture.background || solution.hero.image})` }}><div className="arch-label"><div className="arch-label-main"><span>ARCHITECTURE MAP</span><strong>{architecture.subtitle || architecture.title}</strong></div><b>{solution.name}</b></div><div className="arch-flow">{layers.map((layer, index) => <span key={layer.name}>{layer.name}{index < layers.length - 1 && <i>→</i>}</span>)}</div><div className="arch-layers">{layers.map((layer, i) => <div className="layer" key={layer.name}><span className="layer-no">0{i + 1}</span><b>{layer.name}</b><div className="chips">{(layer.items || []).map(x => <span className="chip" key={x}>{x}</span>)}</div></div>)}</div></div></div></section>;
+  return <section id="architecture" className="section alt"><div className="wrap"><div className="section-head"><div><span className="eyebrow">ARCHITECTURE</span><h2>{architecture.title}</h2></div>{architecture.description && <p>{architecture.description}</p>}</div><div className="arch solution-arch" style={{ backgroundImage: `url(${architecture.background || solution.hero.image})` }}><div className="arch-label"><div className="arch-label-main"><span>ARCHITECTURE MAP</span><strong>{architecture.subtitle || architecture.title}</strong></div><b>{solution.name}</b></div><div className="arch-flow">{layers.map((layer, index) => <span key={layer.name}>{layer.name}{index < layers.length - 1 && <i>→</i>}</span>)}</div><div className="arch-layers">{layers.map((layer, i) => <div className="layer" key={layer.name}><span className="layer-no">0{i + 1}</span><b>{layer.name}</b><div className="chips">{(layer.items || []).map(x => <span className="chip" key={x}>{x}</span>)}</div></div>)}</div></div></div></section>;
 }
 
 function OverviewSection({ overview }) {
+  const { t } = useI18n();
   const bullets = Array.isArray(overview?.bullets) ? overview.bullets.filter((item) => item?.title) : [];
   if (!overview?.title || !bullets.length) return null;
-  return <section id="overview" className="section"><div className="wrap"><div className="solution-overview feature-row"><div className="copy"><span className="eyebrow">{overview.kicker || 'OVERVIEW'}</span><h2>{overview.title}</h2><p>{overview.description}</p><div className="bullet-grid">{bullets.map((item) => <div className="bullet" key={item.title}><b>{item.title}</b><span>{item.text}</span></div>)}</div></div>{overview.image && <div className="visual solution-overview-image"><img src={overview.image} alt={overview.title} /><div className="scene-photo-caption"><small>业务现场 · 系统联动</small><b>{overview.title}</b></div></div>}</div></div></section>;
+  return <section id="overview" className="section"><div className="wrap"><div className="solution-overview feature-row"><div className="copy"><span className="eyebrow">{overview.kicker || 'OVERVIEW'}</span><h2>{overview.title}</h2><p>{overview.description}</p><div className="bullet-grid">{bullets.map((item) => <div className="bullet" key={item.title}><b>{item.title}</b><span>{item.text}</span></div>)}</div></div>{overview.image && <div className="visual solution-overview-image"><img src={overview.image} alt={overview.title} /><div className="scene-photo-caption"><small>{t('业务现场 · 系统联动')}</small><b>{overview.title}</b></div></div>}</div></div></section>;
 }
 
 function ScenariosSection({ scenarios }) {
@@ -151,6 +153,30 @@ function RouteContent() {
   const handleInternalNavigation = (event) => {
     if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
     if (!(event.target instanceof Element)) return;
+    const solutionAnchor = event.target.closest('.anchorbar button');
+    if (solutionAnchor) {
+      const labels = {
+        '产品能力': ['产品与能力', 'Products and capabilities'],
+        'Product capabilities': ['产品与能力', 'Products and capabilities'],
+        '方案概览': ['overview'],
+        'Solution overview': ['overview'],
+        '系统架构': ['architecture'],
+        'System architecture': ['architecture'],
+        '方案优势': ['方案优势', 'Solution advantages'],
+        'Solution advantages': ['方案优势', 'Solution advantages'],
+        '核心场景': ['scenarios'],
+        'Core scenarios': ['scenarios'],
+        '项目流程': ['项目流程', 'Project process'],
+        'Project process': ['项目流程', 'Project process'],
+        '常见问题': ['常见问题', 'Frequently asked questions'],
+        'Frequently asked questions': ['常见问题', 'Frequently asked questions'],
+      };
+      const targets = labels[solutionAnchor.textContent.trim()];
+      const section = targets?.[0] && document.getElementById(targets[0])
+        || targets && Array.from(document.querySelectorAll('main .section')).find((item) => targets.includes(item.querySelector('h2')?.textContent.trim()));
+      if (section) section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      return;
+    }
     const anchor = event.target.closest('a[href]');
     if (!anchor || (anchor.target && anchor.target !== '_self') || anchor.hasAttribute('download')) return;
     const destination = new URL(anchor.href, window.location.href);

@@ -50,7 +50,7 @@ const messages = {
     '能力与服务明细': 'Capabilities and service details', '可持续追踪的业务指标': 'Business metrics for continuous tracking',
     '选择适合的能力组合，开始下一步项目沟通。': 'Choose the right combination of capabilities and start the next project conversation.',
     '核心产品能力': 'Core product capabilities', '技术架构': 'Technical architecture', '应用场景': 'Use cases', '交付流程': 'Delivery process', '服务明细': 'Service details',
-    '核心运营指标': 'Core operating metrics', '产品与能力': 'Products and capabilities', '方案优势': 'Solution advantages', '核心业务场景': 'Core business scenarios',
+    '核心运营指标': 'Core operating metrics', '产品与能力': 'Products and capabilities', '方案概览': 'Solution overview', '方案优势': 'Solution advantages', '核心业务场景': 'Core business scenarios',
     '项目流程': 'Project process', '常见问题': 'Frequently asked questions',
     '服务状态': 'Service status', '正常运行': 'Operational', '认证服务': 'Certification services', '热门操作指南': 'Popular guides',
     '搜索': 'Search', '搜索帮助内容': 'Search help content', '仍需技术支持': 'Need technical support?',
