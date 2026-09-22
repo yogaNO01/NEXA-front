@@ -175,6 +175,8 @@ html{scroll-behavior:auto!important}
 .arch.media-arch:not(.solution-arch) .layer:hover{background:rgba(255,255,255,.94)!important;border-color:#bde7d0!important;transform:translateY(-2px)}
 .arch.media-arch:not(.solution-arch) .layer b{color:#15231c!important}.arch.media-arch:not(.solution-arch) .chip{background:rgba(237,249,243,.94)!important;color:#375d4c!important;border-color:#d7eadf!important}.arch.media-arch:not(.solution-arch) .layer-no{background:#e7f7ef;color:#199460}
 .scenario-panel{min-height:390px;background:#fff;box-shadow:0 14px 42px rgba(21,48,35,.045)}
+.solution-overview{align-items:center}.solution-overview .copy h2{font-size:39px;line-height:1.16;letter-spacing:-.035em;margin:12px 0 18px}.solution-overview .copy p{max-width:590px;font-size:16px}.solution-overview-image{height:380px;min-height:380px;background:#e8eeeb}.solution-overview-image:before,.solution-overview-image:after{display:none}.solution-overview-image img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}.solution-overview-image .scene-photo-caption{z-index:2}.solution-overview-image .scene-photo-caption b{font-size:24px}
+.solution-page-hero~.anchorbar+main{display:flex;flex-direction:column}.solution-page-hero~.anchorbar+main>#overview{order:-1}
 .scenario-copy{padding:42px}.scenario-copy .bullet{background:#fbfcfc;transition:.18s}.scenario-copy .bullet:hover{border-color:#b9dfcc;background:#f5fbf7}
 .scenario-art{min-height:390px;overflow:hidden;background:linear-gradient(180deg,#edf3f0,#cfd7d3)}
 .scenario-art img{width:100%;height:100%;min-height:390px;object-fit:cover;display:block;transition:opacity .22s ease,transform .55s ease}

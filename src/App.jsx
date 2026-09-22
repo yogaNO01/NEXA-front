@@ -1,6 +1,7 @@
-import { useEffect, useLayoutEffect, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import { getSolutionNavigation, getSolutions, getSolutionBySlug } from './api/solutions.js';
+import { staticScenarioImage } from './data/solutionDetailOverrides.js';
 import { submitLead, submitTicket } from './api/forms.js';
 import { getContent, getContentBySlug } from './api/content.js';
 import ReferenceHome, { ReferenceSolutions, SiteHeader, SiteFooter, SuccessDialog } from './ReferenceHome.jsx';
@@ -66,7 +67,24 @@ function ArchitectureSection({ solution }) {
   return <section className="section alt"><div className="wrap"><div className="section-head"><div><span className="eyebrow">ARCHITECTURE</span><h2>{architecture.title}</h2></div>{architecture.description && <p>{architecture.description}</p>}</div><div className="arch solution-arch" style={{ backgroundImage: `url(${architecture.background || solution.hero.image})` }}><div className="arch-label"><div className="arch-label-main"><span>ARCHITECTURE MAP</span><strong>{architecture.subtitle || architecture.title}</strong></div><b>{solution.name}</b></div><div className="arch-flow">{layers.map((layer, index) => <span key={layer.name}>{layer.name}{index < layers.length - 1 && <i>→</i>}</span>)}</div><div className="arch-layers">{layers.map((layer, i) => <div className="layer" key={layer.name}><span className="layer-no">0{i + 1}</span><b>{layer.name}</b><div className="chips">{(layer.items || []).map(x => <span className="chip" key={x}>{x}</span>)}</div></div>)}</div></div></div></section>;
 }
 
-function SolutionDetail({ solution }) { const [scenario, setScenario] = useState(0); const [faq, setFaq] = useState(-1); if (!solution) return <NotFound />; const current = solution.scenarios[scenario] || solution.scenarios[0]; const hasArchitecture = Array.isArray(solution.architecture?.layers) && solution.architecture.layers.some((layer) => layer?.name); const anchors = ['产品能力', ...(hasArchitecture ? ['系统架构'] : []), '方案优势', '核心场景', '项目流程', '常见问题']; return <><section className="page-hero solution-page-hero"><img className="solution-hero-bg" src={solution.hero.image} alt="" /><div className="wrap"><div className="solution-hero-copy"><div className="crumb">首页 / 解决方案 / {solution.name}</div><h1>{solution.hero.title}</h1><p>{solution.hero.description}</p><div className="hero-actions"><a className="btn green" href={href('/contact')}>联系方案专家</a><a className="btn outline solution-back-btn" href={href('/solutions')}>返回解决方案</a></div></div><div className="hero-visual"><div className="solution-banner-photo"><img src={solution.hero.image} alt={`${solution.name}业务现场`} /><div className="solution-banner-caption"><div><b>{solution.name}</b><span>行业现场 · 设备接入 · 运营管理</span></div><em>行业解决方案</em></div></div></div></div></section><div className="anchorbar"><div className="wrap">{anchors.map(x => <button key={x}>{x}</button>)}</div></div><main><section className="section"><div className="wrap"><div className="section-head"><div><span className="eyebrow">CAPABILITIES</span><h2>产品与能力</h2></div><p>以标准模块连接行业现场和真实业务流程。</p></div><div className="cards rich-cards">{solution.capabilities.map((c, i) => <article className="card" key={c.title}><div className="cap-top"><div className="ico">{c.icon}</div><span className="cap-index">0{i + 1}</span></div><h3>{c.title}</h3><p>{c.text}</p><span className="cap-accent" /></article>)}</div></div></section><ArchitectureSection solution={solution} /><section className="section"><div className="wrap"><div className="section-head"><div><span className="eyebrow">ADVANTAGES</span><h2>方案优势</h2></div><p>围绕业务实际需求形成可度量、可扩展的交付结果。</p></div><div className="cards rich-cards">{solution.advantages.map((x, i) => <article className="card" key={x}><div className="cap-top"><div className="ico">0{i + 1}</div><span className="cap-index">0{i + 1}</span></div><h3>{x}</h3><p>围绕业务实际需求，形成可度量、可扩展的交付结果。</p><span className="cap-accent" /></article>)}</div></div></section><section className="section alt"><div className="wrap"><div className="section-head"><div><span className="eyebrow">SCENARIOS</span><h2>核心业务场景</h2></div><p>让设备、人员与运营流程形成闭环。</p></div><div className="scenario-tabs">{solution.scenarios.map((s, i) => <button className={i === scenario ? 'active' : ''} onClick={() => setScenario(i)} key={s.name}>{s.name}</button>)}</div><div className="scenario-panel"><div className="scenario-copy"><span className="scene-kicker">SCENE 0{scenario + 1}</span><h3>{current.name}</h3><p>{current.description}</p><div className="bullet-grid">{solution.capabilities.slice(0, 4).map(x => <div className="bullet" key={x.title}><b>{x.title}</b></div>)}</div></div><div className="scenario-art solution-scenario"><img src={current.image} alt={current.name} /><div className="scene-photo-caption"><small>业务场景 · 系统联动</small><b>{current.name}</b></div></div></div></div></section><section className="section"><div className="wrap"><div className="section-head"><div><span className="eyebrow">PROCESS</span><h2>项目流程</h2></div><p>明确阶段目标与交付物，确保方案可落地。</p></div><div className="flow">{solution.flow.map((x, i) => <article className="flow-step" key={x}><i>0{i + 1}</i><h4>{x}</h4><p>明确阶段目标与交付物，形成可持续运营的实施路径。</p></article>)}</div></div></section><section className="section alt"><div className="wrap"><div className="section-head"><div><span className="eyebrow">FAQ</span><h2>常见问题</h2></div></div><div className="faq">{solution.faq.map((x, i) => <article className="faq-item" key={x.q}><button className="faq-q" onClick={() => setFaq(faq === i ? -1 : i)}><span>{x.q}</span><span>{faq === i ? '−' : '+'}</span></button>{faq === i && <div className="faq-a">{x.a}</div>}</article>)}</div></div></section><section className="section"><div className="wrap"><div className="cta"><div><h2>{solution.cta.title}</h2><p>{solution.cta.text}</p></div><a className="btn green" href={href('/contact')}>{solution.cta.action}</a></div></div></section></main></> }
+function OverviewSection({ overview }) {
+  const bullets = Array.isArray(overview?.bullets) ? overview.bullets.filter((item) => item?.title) : [];
+  if (!overview?.title || !bullets.length) return null;
+  return <section id="overview" className="section"><div className="wrap"><div className="solution-overview feature-row"><div className="copy"><span className="eyebrow">{overview.kicker || 'OVERVIEW'}</span><h2>{overview.title}</h2><p>{overview.description}</p><div className="bullet-grid">{bullets.map((item) => <div className="bullet" key={item.title}><b>{item.title}</b><span>{item.text}</span></div>)}</div></div>{overview.image && <div className="visual solution-overview-image"><img src={overview.image} alt={overview.title} /><div className="scene-photo-caption"><small>业务现场 · 系统联动</small><b>{overview.title}</b></div></div>}</div></div></section>;
+}
+
+function ScenariosSection({ scenarios }) {
+  const [scenario, setScenario] = useState(0);
+  useEffect(() => setScenario(0), [scenarios?.slug]);
+  const items = Array.isArray(scenarios?.items) ? scenarios.items.filter((item) => item?.name || item?.value) : [];
+  if (!items.length) return null;
+  if (scenarios.type === 'metrics') return <section id="scenarios" className="section alt"><div className="wrap"><div className="section-head"><div><span className="eyebrow">SCENARIOS</span><h2>{scenarios.title}</h2></div>{scenarios.description && <p>{scenarios.description}</p>}</div><div className="cards rich-cards">{items.map((item, index) => <article className="card" key={item.label}><div className="cap-top"><div className="ico">0{index + 1}</div></div><h3>{item.value}</h3><p>{item.label}</p></article>)}</div></div></section>;
+  const current = items[scenario] || items[0];
+  const image = current.image || staticScenarioImage(scenarios.slug, scenario);
+  return <section id="scenarios" className="section alt"><div className="wrap"><div className="section-head"><div><span className="eyebrow">SCENARIOS</span><h2>{scenarios.title || '核心业务场景'}</h2></div>{scenarios.description && <p>{scenarios.description}</p>}</div><div className="scenario-tabs">{items.map((item, index) => <button className={index === scenario ? 'active' : ''} onClick={() => setScenario(index)} key={item.name}>{item.name}</button>)}</div><div className="scenario-panel"><div className="scenario-copy"><span className="scene-kicker">SCENE 0{scenario + 1}</span><h3>{current.name}</h3><p>{current.description}</p><div className="bullet-grid">{(current.features || []).map((feature) => <div className="bullet" key={feature}><b>{feature}</b></div>)}</div></div>{image && <div className="scenario-art solution-scenario"><img src={image} alt={current.name} /><div className="scene-photo-caption"><small>业务场景 · 系统联动</small><b>{current.name}</b></div></div>}</div></div></section>;
+}
+
+function SolutionDetail({ solution }) { const [faq, setFaq] = useState(-1); if (!solution) return <NotFound />; const hasArchitecture = Array.isArray(solution.architecture?.layers) && solution.architecture.layers.some((layer) => layer?.name); const hasOverview = Boolean(solution.overview?.title); const hasScenarios = Array.isArray(solution.scenarios?.items) && solution.scenarios.items.some((item) => item?.name || item?.value); const anchors = ['产品能力', ...(hasOverview ? ['方案概览'] : []), ...(hasArchitecture ? ['系统架构'] : []), '方案优势', ...(hasScenarios ? ['核心场景'] : []), '项目流程', '常见问题']; return <><section className="page-hero solution-page-hero"><img className="solution-hero-bg" src={solution.hero.image} alt="" /><div className="wrap"><div className="solution-hero-copy"><div className="crumb">首页 / 解决方案 / {solution.name}</div><h1>{solution.hero.title}</h1><p>{solution.hero.description}</p><div className="hero-actions"><a className="btn green" href={href('/contact')}>联系方案专家</a><a className="btn outline solution-back-btn" href={href('/solutions')}>返回解决方案</a></div></div><div className="hero-visual"><div className="solution-banner-photo"><img src={solution.hero.image} alt={`${solution.name}业务现场`} /><div className="solution-banner-caption"><div><b>{solution.name}</b><span>行业现场 · 设备接入 · 运营管理</span></div><em>行业解决方案</em></div></div></div></div></section><div className="anchorbar"><div className="wrap">{anchors.map(x => <button key={x}>{x}</button>)}</div></div><main><section className="section"><div className="wrap"><div className="section-head"><div><span className="eyebrow">CAPABILITIES</span><h2>产品与能力</h2></div><p>以标准模块连接行业现场和真实业务流程。</p></div><div className="cards rich-cards">{solution.capabilities.map((c, i) => <article className="card" key={c.title}><div className="cap-top"><div className="ico">{c.icon}</div><span className="cap-index">0{i + 1}</span></div><h3>{c.title}</h3><p>{c.text}</p><span className="cap-accent" /></article>)}</div></div></section><OverviewSection overview={solution.overview} /><ArchitectureSection solution={solution} /><section className="section"><div className="wrap"><div className="section-head"><div><span className="eyebrow">ADVANTAGES</span><h2>方案优势</h2></div><p>围绕业务实际需求形成可度量、可扩展的交付结果。</p></div><div className="cards rich-cards">{solution.advantages.map((x, i) => <article className="card" key={x}><div className="cap-top"><div className="ico">0{i + 1}</div><span className="cap-index">0{i + 1}</span></div><h3>{x}</h3><p>围绕业务实际需求，形成可度量、可扩展的交付结果。</p><span className="cap-accent" /></article>)}</div></div></section><ScenariosSection scenarios={solution.scenarios} /><section className="section"><div className="wrap"><div className="section-head"><div><span className="eyebrow">PROCESS</span><h2>项目流程</h2></div><p>明确阶段目标与交付物，确保方案可落地。</p></div><div className="flow">{solution.flow.map((x, i) => <article className="flow-step" key={x}><i>0{i + 1}</i><h4>{x}</h4><p>明确阶段目标与交付物，形成可持续运营的实施路径。</p></article>)}</div></div></section><section className="section alt"><div className="wrap"><div className="section-head"><div><span className="eyebrow">FAQ</span><h2>常见问题</h2></div></div><div className="faq">{solution.faq.map((x, i) => <article className="faq-item" key={x.q}><button className="faq-q" onClick={() => setFaq(faq === i ? -1 : i)}><span>{x.q}</span><span>{faq === i ? '−' : '+'}</span></button>{faq === i && <div className="faq-a">{x.a}</div>}</article>)}</div></div></section><section className="section"><div className="wrap"><div className="cta"><div><h2>{solution.cta.title}</h2><p>{solution.cta.text}</p></div><a className="btn green" href={href('/contact')}>{solution.cta.action}</a></div></div></section></main></> }
 function Form({ kind }) { const ticket = kind === 'ticket'; const [status, setStatus] = useState(''); const [success, setSuccess] = useState(false); const [loading, setLoading] = useState(false); const [resetKey, setResetKey] = useState(0); const send = async (event) => { event.preventDefault(); const form = event.currentTarget; setLoading(true); setStatus(''); setSuccess(false); const data = Object.fromEntries(new FormData(form)); try { await (ticket ? submitTicket(data) : submitLead(data)); form.reset(); setResetKey((current) => current + 1); setSuccess(true); } catch (error) { setStatus(error.message || '提交失败，请稍后重试。'); } finally { setLoading(false); } }; const types = ticket ? ['设备开发', 'App 开发', '云服务', '账号与权限'] : ['产品智能化', '行业解决方案', '生态合作', '媒体合作']; return <><form className="form" onSubmit={send}><input name="company" required placeholder="公司名称" /><input name="name" required placeholder="联系人" /><input name="contact" required placeholder="手机 / 邮箱" /><SelectField key={`type-${resetKey}`} name="type" ariaLabel="需求类型" defaultValue={types[0]} options={types} />{ticket && <SelectField key={`level-${resetKey}`} name="level" ariaLabel="问题级别" defaultValue="P3 一般问题" options={['P3 一般问题', 'P2 关键功能异常', 'P1 生产故障']} />}<textarea name="description" required placeholder={ticket ? '请描述问题现象、影响范围和复现步骤' : '请描述项目背景、预计规模与计划时间'} rows="6" /><button className="button green" disabled={loading}>{loading ? '正在提交…' : ticket ? '提交工单' : '提交需求'}</button>{status && <p className="form-error" role="alert">{status}</p>}</form>{success && <SuccessDialog onClose={() => setSuccess(false)} />}</> }
 const fixedPages = {
   platform: { title: '平台能力', description: '从设备接入、边缘协同到云端应用，提供可组合的 NEXA 技术底座。', cards: ['产品开发', '设备操作系统', '边缘网关', 'App 开发', '云开发', 'AI 能力'] },
@@ -101,6 +119,35 @@ function RouteContent() {
   const { pathname } = useLocation();
   const navigate = useNavigate();
   const path = normalizePath(pathname);
+  const lastWheelAt = useRef(-Infinity);
+  const wheelGuard = useRef(null);
+  const releaseWheelGuard = () => {
+    const guard = wheelGuard.current;
+    if (!guard) return;
+    window.clearTimeout(guard.timer);
+    window.removeEventListener('wheel', guard.preventWheel, true);
+    wheelGuard.current = null;
+  };
+  const guardResidualWheel = () => {
+    releaseWheelGuard();
+    const startedAt = performance.now();
+    const guard = {
+      timer: null,
+      preventWheel: null,
+    };
+    guard.preventWheel = (event) => {
+      if (performance.now() - startedAt > 900) {
+        releaseWheelGuard();
+        return;
+      }
+      event.preventDefault();
+      window.clearTimeout(guard.timer);
+      guard.timer = window.setTimeout(releaseWheelGuard, 180);
+    };
+    wheelGuard.current = guard;
+    window.addEventListener('wheel', guard.preventWheel, { capture: true, passive: false });
+    guard.timer = window.setTimeout(releaseWheelGuard, 220);
+  };
   const handleInternalNavigation = (event) => {
     if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
     if (!(event.target instanceof Element)) return;
@@ -111,12 +158,22 @@ function RouteContent() {
     if (destination.pathname === pathname && destination.search === window.location.search && destination.hash) return;
     event.preventDefault();
     const next = `${destination.pathname}${destination.search}${destination.hash}`;
+    if (performance.now() - lastWheelAt.current < 300) guardResidualWheel();
     if (destination.pathname === pathname && destination.search === window.location.search) {
       scrollToPageTop();
       return;
     }
+    scrollToPageTop();
     navigate(next);
   };
+  useEffect(() => {
+    const trackWheel = () => { lastWheelAt.current = performance.now(); };
+    window.addEventListener('wheel', trackWheel, { capture: true, passive: true });
+    return () => {
+      window.removeEventListener('wheel', trackWheel, true);
+      releaseWheelGuard();
+    };
+  }, []);
   useEffect(() => {
     if (!('scrollRestoration' in window.history)) return undefined;
     const previous = window.history.scrollRestoration;

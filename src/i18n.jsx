@@ -1,5 +1,6 @@
 import { createContext, useCallback, useContext, useEffect, useLayoutEffect, useMemo, useState } from 'react';
 import platformEnglishCopy from './data/platformCopy.en.js';
+import solutionDetailEnglishCopy from './data/solutionDetailCopy.en.js';
 import { unwrapApiText } from './api/apiText.js';
 
 const STORAGE_KEY = 'nexa-locale';
@@ -20,6 +21,7 @@ const messages = {
   },
   en: {
     ...platformEnglishCopy,
+    ...solutionDetailEnglishCopy,
     '首页': 'Home', '平台': 'Platform', '解决方案': 'Solutions', '开发者': 'Developers', '服务与支持': 'Support', '关于我们': 'About',
     '合作咨询': 'Talk to us', '立即了解': 'Explore now', '查看平台能力': 'Explore platform', '预约方案沟通': 'Book a consultation',
     '产品开发': 'Product Development', 'App 开发': 'App Development', '云开发': 'Cloud Development', 'AI 能力': 'AI Capabilities',
